@@ -89,14 +89,22 @@ func (f *FunctionDefinition) Render(b *strings.Builder) {
 
 func (f *StructField) Render(b *strings.Builder) {}
 
+type renderTypeOpts struct {
+	bindTightly   bool
+	requiresSpace bool
+}
+
 func (t *Type) RenderDeclaration(b *strings.Builder, name string) {
-	t.renderType(b, func(bool) {
+	t.renderType(b, func(opts renderTypeOpts) {
 		// Variable names are already atomic. No need to bind tightly.
+		if opts.requiresSpace && name != "" {
+			b.WriteString(" ")
+		}
 		b.WriteString(name)
 	})
 }
 
-func (t *Type) renderType(b *strings.Builder, renderTarget func(bindTightly bool)) {
+func (t *Type) renderType(b *strings.Builder, renderTarget func(renderTypeOpts)) {
 	if t.NamedType != nil {
 		t.NamedType.renderType(b, renderTarget)
 	} else if t.PointerType != nil {
@@ -108,53 +116,64 @@ func (t *Type) renderType(b *strings.Builder, renderTarget func(bindTightly bool
 	} else if t.FunctionType != nil {
 		t.FunctionType.renderType(b, renderTarget)
 	} else {
-		b.WriteString("void ")
-		renderTarget(false)
+		b.WriteString("void")
+		renderTarget(renderTypeOpts{requiresSpace: true})
 	}
 }
 
-func (t *NamedType) renderType(b *strings.Builder, renderTarget func(bool)) {
+func (t *NamedType) renderType(b *strings.Builder, renderTarget func(renderTypeOpts)) {
 	b.WriteString(t.Name)
-	b.WriteString(" ")
-	renderTarget(false)
+	renderTarget(renderTypeOpts{requiresSpace: true})
 }
 
-func (t *PointerType) renderType(b *strings.Builder, renderTarget func(bool)) {
-	t.TargetType.renderType(b, func(bindTightly bool) {
-		if bindTightly {
+func (t *PointerType) renderType(b *strings.Builder, renderTarget func(renderTypeOpts)) {
+	t.TargetType.renderType(b, func(opts renderTypeOpts) {
+		if opts.requiresSpace {
+			b.WriteString(" ")
+		}
+		if opts.bindTightly {
 			b.WriteString("(")
 		}
 		b.WriteString("*")
-		renderTarget(false)
-		if bindTightly {
+		renderTarget(renderTypeOpts{})
+		if opts.bindTightly {
 			b.WriteString(")")
 		}
 	})
 }
 
-func (t *ArrayType) renderType(b *strings.Builder, renderTarget func(bool)) {
-	t.ItemType.renderType(b, func(bool) {
+func (t *ArrayType) renderType(b *strings.Builder, renderTarget func(renderTypeOpts)) {
+	t.ItemType.renderType(b, func(opts renderTypeOpts) {
+		if opts.requiresSpace {
+			b.WriteString(" ")
+		}
 		// Array types bind more strongly than other types, so no need to parenthesize
 		// this type. However, the target type must be bound tightly.
-		renderTarget(true)
+		renderTarget(renderTypeOpts{bindTightly: true})
 		b.WriteString("[]")
 	})
 }
 
-func (t *SizedArrayType) renderType(b *strings.Builder, renderTarget func(bool)) {
-	t.ItemType.renderType(b, func(bool) {
+func (t *SizedArrayType) renderType(b *strings.Builder, renderTarget func(renderTypeOpts)) {
+	t.ItemType.renderType(b, func(opts renderTypeOpts) {
+		if opts.requiresSpace {
+			b.WriteString(" ")
+		}
 		// Array types bind more strongly than other types, so no need to parenthesize
 		// this type. However, the target type must be bound tightly.
-		renderTarget(true)
+		renderTarget(renderTypeOpts{bindTightly: true})
 		b.WriteString(fmt.Sprintf("[%d]", t.Length))
 	})
 }
 
-func (t *FunctionType) renderType(b *strings.Builder, renderTarget func(bool)) {
-	t.ReturnType.renderType(b, func(bool) {
+func (t *FunctionType) renderType(b *strings.Builder, renderTarget func(renderTypeOpts)) {
+	t.ReturnType.renderType(b, func(opts renderTypeOpts) {
+		if opts.requiresSpace {
+			b.WriteString(" ")
+		}
 		// Function types bind more strongly than other types, so no need to parenthesize
 		// this type. However, the target type must be bound tightly.
-		renderTarget(true)
+		renderTarget(renderTypeOpts{bindTightly: true})
 		b.WriteString("(")
 		for i, argument := range t.Arguments {
 			if i != 0 {
