@@ -177,4 +177,26 @@ func TestRenderDeclaration(t *testing.T) {
 		myType.RenderDeclaration(&b, "function_ptr")
 		assert.Equal(t, "int (*function_ptr)(char)", b.String())
 	})
+	t.Run("int (*function_ptr_arr[3])(char)", func(t *testing.T) {
+		var b strings.Builder
+		myType := &Type{SizedArrayType: &SizedArrayType{
+			Length: 3,
+			ItemType: Type{PointerType: &PointerType{Type{
+				FunctionType: &FunctionType{
+					Arguments: []FunctionArgument{
+						{
+							Type: Type{NamedType: &NamedType{
+								Name: "char",
+							}},
+						},
+					},
+					ReturnType: Type{NamedType: &NamedType{
+						Name: "int",
+					}},
+				},
+			}}},
+		}}
+		myType.RenderDeclaration(&b, "function_ptr_arr")
+		assert.Equal(t, "int (*function_ptr_arr[3])(char)", b.String())
+	})
 }
