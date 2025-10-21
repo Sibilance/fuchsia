@@ -9,7 +9,7 @@ import (
 
 func TestRenderDeclaration(t *testing.T) {
 	type RenderDeclarationTest struct {
-		Type    Type
+		Type    Type `yaml:",inline"`
 		VarName string
 		Output  string
 	}
