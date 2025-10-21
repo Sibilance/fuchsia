@@ -44,6 +44,8 @@ type FunctionDefinition struct {
 	Statements []Statement
 }
 
+type Statement struct{}
+
 type Type struct {
 	NamedType      string
 	PointerType    *PointerType
@@ -74,5 +76,3 @@ type FunctionArgument struct {
 	Name string
 	Type Type `yaml:",inline"`
 }
-
-type Statement struct{}

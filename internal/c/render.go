@@ -58,6 +58,8 @@ func (s *StructDefinition) Render(b *strings.Builder) {
 	b.WriteString("};\n")
 }
 
+func (f *StructField) Render(b *strings.Builder) {}
+
 func (d *Declaration) Render(b *strings.Builder) {
 	if d.IsStatic {
 		b.WriteString("static ")
@@ -87,15 +89,15 @@ func (f *FunctionDefinition) Render(b *strings.Builder) {
 	b.WriteString("}\n")
 }
 
-func (f *StructField) Render(b *strings.Builder) {}
+func (s *Statement) Render(b *strings.Builder) {}
+
+func (t *Type) Render(b *strings.Builder) {
+	t.renderType(b, func(renderTypeOpts) {})
+}
 
 type renderTypeOpts struct {
 	bindTightly   bool
 	requiresSpace bool
-}
-
-func (t *Type) Render(b *strings.Builder) {
-	t.RenderDeclaration(b, "")
 }
 
 func (t *Type) RenderDeclaration(b *strings.Builder, name string) {
@@ -184,5 +186,3 @@ func (t *FunctionType) renderType(b *strings.Builder, renderTarget func(renderTy
 		b.WriteString(")")
 	})
 }
-
-func (s *Statement) Render(b *strings.Builder) {}

@@ -7,6 +7,22 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestHeader_Render(t *testing.T) {}
+
+func TestProgram_Render(t *testing.T) {}
+
+func TestInclude_Render(t *testing.T) {}
+
+func TestStructDefinition_Render(t *testing.T) {}
+
+func TestStructField_Render(t *testing.T) {}
+
+func TestDeclaration_Render(t *testing.T) {}
+
+func TestFunctionDefinition_Render(t *testing.T) {}
+
+func TestStatement_Render(t *testing.T) {}
+
 func TestType_Render(t *testing.T) {
 	type TestCase struct {
 		Type   Type `yaml:",inline"`
