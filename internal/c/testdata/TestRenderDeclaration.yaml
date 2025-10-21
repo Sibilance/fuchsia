@@ -1,0 +1,163 @@
+---
+type:
+  namedtype:
+    name: int
+varname: my_int
+output: int my_int
+
+---
+type:
+  pointertype:
+    targettype:
+      namedtype:
+        name: int
+varname: my_int_ptr
+output: int *my_int_ptr
+
+---
+type:
+  pointertype:
+    targettype:
+      pointertype:
+        targettype:
+          namedtype:
+            name: int
+varname: my_int_ptr_ptr
+output: int **my_int_ptr_ptr
+
+---
+type:
+  arraytype:
+    itemtype:
+      pointertype:
+        targettype:
+          namedtype:
+            name: char
+varname: my_cstring_array
+output: char *my_cstring_array[]
+
+---
+type:
+  sizedarraytype:
+    length: 5
+    itemtype:
+      pointertype:
+        targettype:
+          namedtype:
+            name: char
+varname: my_cstring_array
+output: char *my_cstring_array[5]
+
+---
+type:
+  pointertype:
+    targettype:
+      arraytype:
+        itemtype:
+          namedtype:
+            name: int
+varname: my_array_pointer
+output: int (*my_array_pointer)[]
+
+---
+type:
+  pointertype:
+    targettype:
+      sizedarraytype:
+        length: 5
+        itemtype:
+          namedtype:
+            name: int
+varname: my_array_pointer
+output: int (*my_array_pointer)[5]
+
+---
+type:
+  functiontype:
+    returntype:
+      namedtype:
+        name: int
+varname: foo
+output: int foo()
+
+---
+type:
+  functiontype:
+    arguments:
+      - type:
+          namedtype:
+            name: char
+    returntype:
+      namedtype:
+        name: int
+varname: foo
+output: int foo(char)
+
+---
+type:
+  functiontype:
+    arguments:
+      - name: argc
+        type:
+          namedtype:
+            name: int
+      - name: argv
+        type:
+          arraytype:
+            itemtype:
+              pointertype:
+                targettype:
+                  namedtype:
+                    name: char
+    returntype:
+      namedtype:
+        name: int
+varname: main
+output: int main(int argc, char *argv[])
+
+---
+type:
+  functiontype:
+    returntype:
+      pointertype:
+        targettype:
+          sizedarraytype:
+            length: 5
+            itemtype:
+              namedtype:
+                name: int
+varname: return_array_ptr
+output: int (*return_array_ptr())[5]
+
+---
+type:
+  pointertype:
+    targettype:
+      functiontype:
+        arguments:
+          - type:
+              namedtype:
+                name: char
+        returntype:
+          namedtype:
+            name: int
+varname: function_ptr
+output: int (*function_ptr)(char)
+
+---
+type:
+  sizedarraytype:
+    length: 3
+    itemtype:
+      pointertype:
+        targettype:
+          functiontype:
+            arguments:
+              - type:
+                  namedtype:
+                    name: char
+            returntype:
+              namedtype:
+                name: int
+varname: function_ptr_arr
+output: int (*function_ptr_arr[3])(char)
