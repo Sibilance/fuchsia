@@ -25,7 +25,7 @@ type StructDefinition struct {
 
 type StructField struct {
 	Name string
-	Type Type
+	Type Type `yaml:",inline"`
 }
 
 type Declaration struct {
@@ -33,50 +33,46 @@ type Declaration struct {
 	IsStatic   bool
 	IsExtern   bool
 	IsVolatile bool
-	Type       Type
+	Type       Type `yaml:",inline"`
 }
 
 type FunctionDefinition struct {
 	Name       string
 	IsStatic   bool
 	IsInline   bool
-	Type       FunctionType
+	Type       FunctionType `yaml:",inline"`
 	Statements []Statement
 }
 
 type Type struct {
-	NamedType      *NamedType
+	NamedType      string
 	PointerType    *PointerType
 	ArrayType      *ArrayType
 	SizedArrayType *SizedArrayType
 	FunctionType   *FunctionType
 }
 
-type NamedType struct {
-	Name string
-}
-
 type PointerType struct {
-	TargetType Type
+	TargetType Type `yaml:",inline"`
 }
 
 type ArrayType struct {
-	ItemType Type
+	ItemType Type `yaml:",inline"`
 }
 
 type SizedArrayType struct {
 	Length   int
-	ItemType Type
+	ItemType Type `yaml:",inline"`
 }
 
 type FunctionType struct {
 	Arguments  []FunctionArgument
-	ReturnType Type
+	ReturnType Type `yaml:",inline"`
 }
 
 type FunctionArgument struct {
 	Name string
-	Type Type
+	Type Type `yaml:",inline"`
 }
 
 type Statement struct{}

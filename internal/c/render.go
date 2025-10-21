@@ -105,8 +105,9 @@ func (t *Type) RenderDeclaration(b *strings.Builder, name string) {
 }
 
 func (t *Type) renderType(b *strings.Builder, renderTarget func(renderTypeOpts)) {
-	if t.NamedType != nil {
-		t.NamedType.renderType(b, renderTarget)
+	if t.NamedType != "" {
+		b.WriteString(t.NamedType)
+		renderTarget(renderTypeOpts{requiresSpace: true})
 	} else if t.PointerType != nil {
 		t.PointerType.renderType(b, renderTarget)
 	} else if t.ArrayType != nil {
@@ -119,11 +120,6 @@ func (t *Type) renderType(b *strings.Builder, renderTarget func(renderTypeOpts))
 		b.WriteString("void")
 		renderTarget(renderTypeOpts{requiresSpace: true})
 	}
-}
-
-func (t *NamedType) renderType(b *strings.Builder, renderTarget func(renderTypeOpts)) {
-	b.WriteString(t.Name)
-	renderTarget(renderTypeOpts{requiresSpace: true})
 }
 
 func (t *PointerType) renderType(b *strings.Builder, renderTarget func(renderTypeOpts)) {
