@@ -94,6 +94,10 @@ type renderTypeOpts struct {
 	requiresSpace bool
 }
 
+func (t *Type) Render(b *strings.Builder) {
+	t.RenderDeclaration(b, "")
+}
+
 func (t *Type) RenderDeclaration(b *strings.Builder, name string) {
 	t.renderType(b, func(opts renderTypeOpts) {
 		// Variable names are already atomic. No need to bind tightly.

@@ -1,0 +1,90 @@
+---
+namedtype: int
+output: int
+
+---
+pointertype:
+  namedtype: int
+output: int *
+
+---
+pointertype:
+  pointertype:
+    namedtype: int
+output: int **
+
+---
+arraytype:
+  pointertype:
+    namedtype: char
+output: char *[]
+
+---
+sizedarraytype:
+  length: 5
+  pointertype:
+    namedtype: char
+output: char *[5]
+
+---
+pointertype:
+  arraytype:
+    namedtype: int
+output: int (*)[]
+
+---
+pointertype:
+  sizedarraytype:
+    length: 5
+    namedtype: int
+output: int (*)[5]
+
+---
+functiontype:
+  namedtype: int
+output: int ()
+
+---
+functiontype:
+  arguments:
+    - namedtype: char
+  namedtype: int
+output: int (char)
+
+---
+functiontype:
+  arguments:
+    - name: argc
+      namedtype: int
+    - name: argv
+      arraytype:
+        pointertype:
+          namedtype: char
+  namedtype: int
+output: int (int argc, char *argv[])
+
+---
+functiontype:
+  pointertype:
+    sizedarraytype:
+      length: 5
+      namedtype: int
+output: int (*())[5]
+
+---
+pointertype:
+  functiontype:
+    arguments:
+      - namedtype: char
+    namedtype: int
+output: int (*)(char)
+
+---
+sizedarraytype:
+  length: 3
+  pointertype:
+    functiontype:
+      arguments:
+        - namedtype: char
+      namedtype: int
+output: int (*[3])(char)
